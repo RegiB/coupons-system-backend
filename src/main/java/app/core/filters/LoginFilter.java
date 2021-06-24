@@ -24,7 +24,7 @@ public class LoginFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException{
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException{
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String method = req.getMethod();
@@ -33,7 +33,7 @@ public class LoginFilter implements Filter {
 		String acrh = req.getHeader("access-control-request-headers");
 		String url = req.getRequestURI();
 		
-		try {
+//		try {
 
 			if (url.contains("/login") || url.contains("/general") || url.contains("/pics")) {
 				System.out.println("LOGIN FILTER PASS-------------");
@@ -63,12 +63,12 @@ public class LoginFilter implements Filter {
 					res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not logged in");
 				}
 			}
-		} catch (Exception e) {
-			res.setHeader("Access-Control-Allow-Origin", "*");
-			res.setHeader("Access-Control-Allow-Headers", "*");
-			res.setHeader("Access-Control-Expose-Headers", "*");
-			res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not authorized");
-		}
+//		} catch (Exception e) {
+//			res.setHeader("Access-Control-Allow-Origin", "*");
+//			res.setHeader("Access-Control-Allow-Headers", "*");
+//			res.setHeader("Access-Control-Expose-Headers", "*");
+//			res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not authorized");
+//		}
 	}
 
 }
