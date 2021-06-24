@@ -15,7 +15,7 @@ import app.core.entities.Coupon;
 import app.core.entities.Coupon.Category;
 import app.core.services.GeneralService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/general")
 public class GeneralController {

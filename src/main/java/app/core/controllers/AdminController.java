@@ -21,7 +21,7 @@ import app.core.entities.Customer;
 import app.core.exceptions.CouponSystemException;
 import app.core.services.AdminService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {

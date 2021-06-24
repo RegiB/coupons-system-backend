@@ -19,7 +19,7 @@ import app.core.exceptions.CouponSystemException;
 import app.core.services.CompanyService;
 import app.core.services.CustomerService;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class LoginController {
