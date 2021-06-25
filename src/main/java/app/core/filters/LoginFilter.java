@@ -24,7 +24,7 @@ public class LoginFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException{
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String method = req.getMethod();
@@ -32,43 +32,32 @@ public class LoginFilter implements Filter {
 		String email = req.getHeader("clientEmail");
 		String acrh = req.getHeader("access-control-request-headers");
 		String url = req.getRequestURI();
-		
-//		try {
 
-			if (url.contains("/login") || url.contains("/general") || url.contains("/pics")) {
+		if (url.contains("/login") || url.contains("/general") || url.contains("/pics")) {
+			System.out.println("LOGIN FILTER PASS-------------");
+			chain.doFilter(request, response);
+			return;
+		}
+
+		if (token != null) {
+			if (!jwtUtil.validateToken(token, email)) {
+				res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not authorized");  
+			} else {
 				System.out.println("LOGIN FILTER PASS-------------");
 				chain.doFilter(request, response);
-				return;
 			}
-
-			if (token != null) {
-				if (!jwtUtil.validateToken(token, email)) {
-					res.setHeader("Access-Control-Allow-Origin", "*");
-					res.setHeader("Access-Control-Allow-Headers", "*");
-					res.setHeader("Access-Control-Expose-Headers", "*");
-					res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not authorized");
-				} else {
-					System.out.println("LOGIN FILTER PASS-------------");
-					chain.doFilter(request, response);
-				}
+		} else {
+			if (acrh != null && method.equals("OPTIONS")) {
+				System.out.println("PREFLIGHT-------------");
+				res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+				res.setHeader("Access-Control-Allow-Origin", "*");
+				res.setHeader("Access-Control-Allow-Headers", "*");
+				res.sendError(HttpStatus.OK.value(), "preflight");
 			} else {
-				if (acrh != null && method.equals("OPTIONS")) {
-					System.out.println("PREFLIGHT-------------");
-					res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-					res.setHeader("Access-Control-Allow-Origin", "*");
-					res.setHeader("Access-Control-Allow-Headers", "*");
-					res.sendError(HttpStatus.OK.value(), "preflight");
-				} else {
-					System.out.println("LOGIN FILTER FAILL-------------");
-					res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not logged in");
-				}
+				System.out.println("LOGIN FILTER FAILL-------------");
+				res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not logged in");
 			}
-//		} catch (Exception e) {
-//			res.setHeader("Access-Control-Allow-Origin", "*");
-//			res.setHeader("Access-Control-Allow-Headers", "*");
-//			res.setHeader("Access-Control-Expose-Headers", "*");
-//			res.sendError(HttpStatus.UNAUTHORIZED.value(), "You are not authorized");
-//		}
+		}
 	}
 
 }
